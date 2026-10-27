@@ -30,7 +30,7 @@ REST-сервис для выборки инстансов DICOM по AN и/ил
 ## Сборка
 
     mvn clean package
-    java -jar target/old-eris-index-2.0.0.jar
+    java -jar target/old-eris-index-2.0.1.jar
 
 ## СУБД
 
@@ -73,3 +73,39 @@ Debug пишется в `olderis-index-debug.log`; при INFO — не созд
       -H 'Content-Type: application/json' -d '{"an":"ACC12345"}' | jq
 
 Подробная инструкция и список тестов — [`src/main/resources/demo/README.md`](src/main/resources/demo/README.md).
+
+## Быстрая шпаргалка
+
+### Собрать и запустить
+
+    cd ~/GIT_Projects/old-eris-index/v2.0.0
+    export LOG_DIR=/tmp/olderis-index && mkdir -p "$LOG_DIR"
+
+    # Обычный запуск (оба кластера живы)
+    mvn spring-boot:run -Dspring-boot.run.profiles=demo
+
+    # Partial-тест (B недоступен, ожидается WARN в логе)
+    mvn spring-boot:run -Dspring-boot.run.profiles=demo,partial
+
+### Проверить ответы
+
+    curl -s localhost:8080/api/v1/admin/storage-config | jq
+    curl -s -X POST localhost:8080/api/v1/research \
+      -H 'Content-Type: application/json' -d '{"an":"ACC12345"}' | jq
+    curl -s -X POST localhost:8080/api/v1/research \
+      -H 'Content-Type: application/json' -d '{"an":"ACC-B-ONLY"}' | jq
+    curl -s -X POST localhost:8080/api/v1/research \
+      -H 'Content-Type: application/json' -d '{"an":"ACC12345","suid":"U1"}' | jq
+    curl -i -X POST localhost:8080/api/v1/research \
+      -H 'Content-Type: application/json' -d '{"an":"ACC12345","suid":"U2"}'
+
+### Partial — проверить WARN
+
+    grep PARTIAL /tmp/olderis-index/application.log | tail -3
+
+### Логи / jar без Maven / очистка
+
+    tail -f /tmp/olderis-index/application.log
+    mvn clean package -DskipTests
+    java -jar target/old-eris-index-2.0.1.jar
+    rm -rf /tmp/olderis-index target
