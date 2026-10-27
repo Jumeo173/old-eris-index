@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example.olderisindex: INFO
+  file:
+    name: /tmp/olderis-index/application.log
+
+app:
+  clusters-startup-policy: require-any
+
+  clusters:
+    - name: A
+      dialect: h2
+      jdbc-url: "jdbc:h2:mem:agfa-a;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:demo/init-a.sql'"
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      max-pool-size: 2
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: true
+
+    - name: B
+      dialect: h2
+      jdbc-url: "jdbc:h2:mem:agfa-b;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:demo/init-b.sql'"
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      max-pool-size: 2
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: true

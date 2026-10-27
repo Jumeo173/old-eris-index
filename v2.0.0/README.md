@@ -49,3 +49,27 @@ Debug пишется в `olderis-index-debug.log`; при INFO — не созд
 
     ./scripts/refresh-all-pods.sh status
     ./scripts/refresh-all-pods.sh refresh
+
+## Local demo (H2, без Oracle)
+
+Для локальной проверки multi-cluster логики (union, dedupe, partial) — без Oracle и Docker.
+
+### Обычный запуск — оба кластера живы
+
+    export LOG_DIR=/tmp/olderis-index && mkdir -p "$LOG_DIR"
+    mvn spring-boot:run -Dspring-boot.run.profiles=demo
+
+### Тест partial — кластер B недоступен
+
+    export LOG_DIR=/tmp/olderis-index && mkdir -p "$LOG_DIR"
+    mvn spring-boot:run -Dspring-boot.run.profiles=demo,partial
+
+Ожидаемо: `200 OK` с данными из A + `WARN research PARTIAL` в логе.
+
+### Проверка
+
+    curl -s localhost:8080/api/v1/admin/storage-config | jq
+    curl -s -X POST localhost:8080/api/v1/research \
+      -H 'Content-Type: application/json' -d '{"an":"ACC12345"}' | jq
+
+Подробная инструкция и список тестов — [`src/main/resources/demo/README.md`](src/main/resources/demo/README.md).

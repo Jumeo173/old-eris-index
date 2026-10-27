@@ -1,0 +1,29 @@
+# Профиль для теста partial: кластер B намеренно недоступен.
+# Запуск: mvn spring-boot:run -Dspring-boot.run.profiles=demo,partial
+app:
+  clusters:
+    - name: A
+      dialect: h2
+      jdbc-url: "jdbc:h2:mem:agfa-a;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:demo/init-a.sql'"
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      max-pool-size: 2
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: true
+
+    - name: B
+      dialect: h2
+      jdbc-url: "jdbc:h2:tcp://localhost:9999/nope"
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      max-pool-size: 2
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: false

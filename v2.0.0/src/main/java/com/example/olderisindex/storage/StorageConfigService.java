@@ -64,7 +64,8 @@ public class StorageConfigService {
         this.loadSql = read(loadSqlResource);
         this.fingerprintSqlByDialect = Map.of(
                 "oracle",   read(fpOracle),
-                "postgres", read(fpPostgres));
+                "postgres", read(fpPostgres),
+                "h2",       "SELECT RAWTOHEX(HASH('SHA256', content)) FROM dcm4che_config WHERE path = ?");
     }
 
     private static String read(Resource r) {
