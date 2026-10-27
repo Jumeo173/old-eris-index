@@ -30,7 +30,7 @@ REST-сервис для выборки инстансов DICOM по AN и/ил
 ## Сборка
 
     mvn clean package
-    java -jar target/old-eris-index-1.0.0.jar
+    java -jar target/old-eris-index-2.0.0.jar
 
 ## СУБД
 
