@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_DIR"   value="${LOG_DIR:-/var/log/olderis-index}"/>
+    <property name="APP_LOG"   value="${LOG_DIR}/application.log"/>
+    <property name="DEBUG_LOG" value="${LOG_DIR}/olderis-index-debug.log"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder><pattern>%d{ISO8601} %-5level [%thread] %logger{36} - %msg%n</pattern></encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize><maxHistory>30</maxHistory><totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder><pattern>%d{ISO8601} %-5level [%thread] %logger{36} - %msg%n</pattern></encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><level>INFO</level></filter>
+    </appender>
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${DEBUG_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${DEBUG_LOG}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize><maxHistory>7</maxHistory><totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder><pattern>%d{ISO8601} %-5level [%thread] %logger{36} - %msg%n</pattern></encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level><onMatch>ACCEPT</onMatch><onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <logger name="com.example.olderisindex" level="INFO" additivity="true">
+        <appender-ref ref="DEBUG_FILE"/>
+    </logger>
+    <root level="INFO"><appender-ref ref="CONSOLE"/><appender-ref ref="FILE"/></root>
+</configuration>

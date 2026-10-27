@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: old-eris-index
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=2000,expireAfterWrite=10m
+
+app:
+  # require-all | require-any | best-effort
+  clusters-startup-policy: require-any
+
+  clusters:
+    - name: A
+      dialect: oracle
+      jdbc-url: jdbc:oracle:thin:@//agfa-a:1521/DCMDB
+      username: ${DB_USER_A}
+      password: ${DB_PASSWORD_A}
+      driver-class-name: oracle.jdbc.OracleDriver
+      max-pool-size: 10
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: true
+
+    - name: B
+      dialect: oracle
+      jdbc-url: jdbc:oracle:thin:@//agfa-b:1521/DCMDB
+      username: ${DB_USER_B}
+      password: ${DB_PASSWORD_B}
+      driver-class-name: oracle.jdbc.OracleDriver
+      max-pool-size: 10
+      storage-config:
+        path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+        fingerprint-interval: 1h
+        fingerprint-enabled: true
+        initial-load-fail-fast: true
+
+  research:
+    db-timeout-seconds: 20
+    executor-core: 8
+    executor-max: 16
+    executor-queue: 100
+
+management:
+  endpoints.web.exposure.include: health,info,metrics,prometheus,loggers
+  endpoint.health.probes.enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.example.olderisindex: INFO
+  file:
+    name: ${LOG_DIR:/var/log/olderis-index}/application.log

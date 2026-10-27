@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: old-eris-index
+  datasource:
+    url: jdbc:oracle:thin:@//oracle-host:1521/DCMDB
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 5000
+      validation-timeout: 3000
+      pool-name: olderis-hikari
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=2000,expireAfterWrite=10m
+
+app:
+  db:
+    dialect: oracle
+  research:
+    db-timeout-seconds: 20
+    executor-core: 8
+    executor-max: 16
+    executor-queue: 100
+  storage-config:
+    path: /dicomConfigurationRoot/dicomDevicesRoot/dcm4chee-arc
+    fingerprint-interval: 1h
+    fingerprint-enabled: true
+    initial-load-fail-fast: true
+
+management:
+  endpoints.web.exposure.include: health,info,metrics,prometheus,loggers
+  endpoint.health.probes.enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.example.olderisindex: INFO
+  file:
+    name: /var/log/olderis-index/application.log

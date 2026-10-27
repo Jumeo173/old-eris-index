@@ -1,0 +1,32 @@
+# Build / Maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Локальные override'ы с секретами
+application-local.yml
+application-*.local.yml
+config/application-local.yml
+
+# Архивы (не коммитим — они в Git не место)
+*.tar.gz
+*.zip
+
+# k6 отчёты
+k6/*.json
+k6/*.log
