@@ -114,7 +114,7 @@ H2 in-memory умирает вместе с JVM — при следующем з
 ## Связанные файлы
 
 - `application-demo.yml` — конфиг: оба кластера через H2 in-memory
-- `application-demo-partial.yml` — оверрайд: кластер B недоступен
+- `application-partial.yml` — оверрайд: кластер B недоступен
 - `demo/init-a.sql` — schema + seed для A
 - `demo/init-b.sql` — schema + seed для B
 
